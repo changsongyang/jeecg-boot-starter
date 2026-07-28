@@ -264,10 +264,15 @@ public class InternalTokenStream implements TokenStream {
                             return;
                         }
 
+                        InvocationContext ctx = InvocationContext.builder()
+                                .chatMemoryId(chatMemory.id())
+                                .timestampNow()
+                                .build();
+
                         // 工具执行前回调
                         if (beforeToolExecutionHandler != null) {
                             try {
-                                BeforeToolExecution beforeToolExecution = BeforeToolExecution.builder().request(toolExecReq).build();
+                                BeforeToolExecution beforeToolExecution = BeforeToolExecution.builder().request(toolExecReq).invocationContext(ctx).build();
                                 beforeToolExecutionHandler.accept(beforeToolExecution);
                             } catch (Exception e) {
                                 log.error("Error in beforeToolExecutionHandler callback: {}", e.getMessage());
@@ -278,10 +283,6 @@ public class InternalTokenStream implements TokenStream {
                         String result;
                         try {
                             //update-begin---author:wangshuai---date:2026-03-17---for:【QQYUN-14935】构建skills插件---
-                            InvocationContext ctx = InvocationContext.builder()
-                                    .chatMemoryId(chatMemory.id())
-                                    .timestampNow()
-                                    .build();
                             result = executor.executeWithContext(toolExecReq, ctx).resultText();
                             //update-end---author:wangshuai---date:2026-03-17---for:【QQYUN-14935】构建skills插件---
                             //update-begin---wangshuai---date:20260413  for：[issue/1560]/[issues/9527]AI应用调用千问qwen-plus 大模型 提示messages and prompt must not all null #18-----------
@@ -299,6 +300,7 @@ public class InternalTokenStream implements TokenStream {
                             try {
                                 onToolExecuted.accept(ToolExecution.builder()
                                         .request(toolExecReq)
+                                        .invocationContext(ctx)
                                         .result(ToolExecutionResult.builder().resultText(result).build())
                                         .build());
                             } catch (Exception e) {
