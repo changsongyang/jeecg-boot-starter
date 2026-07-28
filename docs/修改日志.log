@@ -179,3 +179,7 @@ jeecg-boot-starter-ai/src/test/java/org/jeecg/ai/handler/SkillTest.java
   3) jeecg-boot-starter-rocketmq: rocketmq-spring-boot-starter 2.3.4→2.3.5
   4) SkillShellTest/SkillTest: @BeforeAll 新增 Assumptions.assumeTrue(Files.exists(...)) 检查，本地 Skills 目录不存在时优雅 SKIP 而非 ERROR
 ---author:scott---date:20260708---for: 升级 Spring Boot 4.1.0，依赖版本升级适配---
+
+-- author:sjlei---date:20260728--for: 【LHZP-1581】修复 BeforeToolExecution / ToolExecution 缺少 invocationContext 导致工具调用过程不显示 ---
+src/main/java/org/jeecg/ai/stream/InternalTokenStream.java
+-- author:sjlei---date:20260728--for: 【LHZP-1581】修复 BeforeToolExecution / ToolExecution 缺少 invocationContext 导致工具调用过程不显示 ---
